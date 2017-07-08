@@ -21,14 +21,15 @@ class SecretSanta
 
         $assignments = [];
         $participantCount = count($participants);
+
         shuffle($participants);
 
         foreach ($participants as $index => $participant) {
             $assignments[] = [
                 'santa' => $participant, 
                 'recipient' => $this->isFinalParticipant($index, $participantCount) 
-                    ? $participants[0] 
-                    : $participants[$index + 1],
+                    ? $this->getFirstParticipant($participants)
+                    : $this->getNextParticipant($participants, $index),
             ];
         }
 
@@ -54,5 +55,15 @@ class SecretSanta
     private function isFinalParticipant(int $index, int $participantCount): bool
     {
         return $index + 1 === $participantCount;
+    }
+
+    private function getFirstParticipant(array $participants)
+    {
+        return $participants[0];
+    }
+
+    private function getNextParticipant(array $participants, int $index)
+    {
+        return $participants[$index + 1];
     }
 }

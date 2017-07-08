@@ -107,19 +107,25 @@ class SecretSantaTest extends TestCase
     public function noOneIsAssignedTwice($participantsJsonFile)
     {
         $participants = $this->getParticipantsFromJsonFile($participantsJsonFile);
-        $santas = $recipients = [];
-
-        foreach ($this->santa->assign($participants) as $pair) {
-            $santas[] = $pair['santa'];
-            $recipients[] = $pair['recipient'];
-        }
-
-        $this->assertNotEmpty($santas);
-        $this->assertNotEmpty($recipients);
+        list($santas, $recipients) = $this->getSantasAndRecipients($participants);
+        $this->assertArraysNotEmpty($santas, $recipients);
         $this->assertEquals(array_unique($santas), $santas);
         $this->assertEquals(array_unique($recipients), $recipients);
     }
-    
+
+    /** 
+     * @test
+     * @dataProvider jsonParticipants
+     */
+    public function numberOfAssignmentsShouldEqualNumberOfParticipants($participantsJsonFile)
+    {
+        $participants = $this->getParticipantsFromJsonFile($participantsJsonFile);
+        list($santas, $recipients) = $this->getSantasAndRecipients($participants);
+        $this->assertArraysNotEmpty($santas, $recipients);
+        $this->assertCount(count($participants), $santas);
+        $this->assertCount(count($participants), $recipients);
+    }
+
     public function jsonParticipants()
     {
         return [
@@ -132,5 +138,22 @@ class SecretSantaTest extends TestCase
     private function getParticipantsFromJsonFile(string $filePath): array
     {
         return json_decode(file_get_contents($filePath));
+    }
+
+    private function getSantasAndRecipients(array $participants): array
+    {
+        $santas = $recipients = [];
+        foreach ($this->santa->assign($participants) as $pair) {
+            $santas[] = $pair['santa'];
+            $recipients[] = $pair['recipient'];
+        }
+
+        return [$santas, $recipients];
+    }
+
+    private function assertArraysNotEmpty(array $arrayOne, array $arrayTwo)
+    {
+        $this->assertNotEmpty($arrayOne);
+        $this->assertNotEmpty($arrayTwo);
     }
 }
