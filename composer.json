@@ -1,0 +1,11 @@
+{
+    "name": "dlucic/events",
+    "require-dev": {
+        "phpunit/phpunit": "^6.1"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {"Events\\": "src/"}
+    },
+    "require": {}
+}
