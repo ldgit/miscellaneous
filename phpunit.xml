@@ -2,5 +2,4 @@
     bootstrap="./vendor/autoload.php"
     colors="true"
 >
-
 </phpunit>
