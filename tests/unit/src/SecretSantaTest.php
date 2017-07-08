@@ -18,7 +18,7 @@ class SecretSantaTest extends TestCase
      * @test
      * @dataProvider invalidParticipantsList
      */
-    public function shouldThrowErrorWhenGivenLessThanTwoParticipants($participants)
+    public function shouldThrowExceptionWhenGivenLessThanTwoParticipants($participants)
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->santa->assign($participants);
@@ -29,12 +29,21 @@ class SecretSantaTest extends TestCase
         return [[[]], [['john']]];
     }
 
+    /** @test */
+    public function shouldThrowExceptionIfGivenDuplicateParticipants()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->santa->assign(['alice', 'bob', 'alice']);
+    }
+
     /** 
      * @test
      * @dataProvider twoParticipantsList
      */
-    public function givenTwoParticipantsAssignThemAsEachOthersSecretSanta($participants, $expected)
-    {
+    public function shouldAssignParticipantsAsEachOthersSecretSantaIfGivenOnlyTwo(
+        $participants, 
+        $expected
+    ) {
         $actual = $this->santa->assign($participants);
         array_multisort($actual);
         array_multisort($expected);
@@ -53,29 +62,6 @@ class SecretSantaTest extends TestCase
                 ['santa' => 'eve', 'recipient' => 'oscar'],
             ]],
         ];
-    }
-
-    /** @test */
-    public function shouldThrowExceptionIfGivenDuplicateParticipants()
-    {
-        $this->expectException(\InvalidArgumentException::class);
-        $this->santa->assign(['alice', 'bob', 'alice']);
-    }
-    
-    /** @test */
-    public function givenThreeParticipantsShuffleThemAndAssignEachToTheNextOneInArray()
-    {
-        $participants = ['alice', 'bob', 'carol'];
-
-        $actual = $this->santa->assign($participants);
-        array_multisort($actual);
-
-        // $participants shuffle results in ['alice', 'carol', 'bob'] with given test SEED
-        $this->assertEquals([
-            ['santa' => 'alice', 'recipient' => 'carol'],
-            ['santa' => 'bob', 'recipient' => 'alice'],
-            ['santa' => 'carol', 'recipient' => 'bob'],
-        ], $actual);
     }
 
     /** 
@@ -105,14 +91,33 @@ class SecretSantaTest extends TestCase
      * @test
      * @dataProvider jsonParticipants
      */
-    public function noOneGetsPickedAsTheirOwnSecretSanta($participantsJsonFile)
+    public function noOneIsAssignedAsTheirOwnSecretSanta($participantsJsonFile)
     {
         $this->santa = new SecretSanta();
         $participants = $this->getParticipantsFromJsonFile($participantsJsonFile);
-        $actual = $this->santa->assign($participants);
         foreach ($this->santa->assign($participants) as $pair) {
-             $this->assertNotEquals($pair['santa'], $pair['recipient']);
+            $this->assertNotEquals($pair['santa'], $pair['recipient']);
         } 
+    }
+
+    /** 
+     * @test
+     * @dataProvider jsonParticipants
+     */
+    public function noOneIsAssignedTwice($participantsJsonFile)
+    {
+        $participants = $this->getParticipantsFromJsonFile($participantsJsonFile);
+        $santas = $recipients = [];
+
+        foreach ($this->santa->assign($participants) as $pair) {
+            $santas[] = $pair['santa'];
+            $recipients[] = $pair['recipient'];
+        }
+
+        $this->assertNotEmpty($santas);
+        $this->assertNotEmpty($recipients);
+        $this->assertEquals(array_unique($santas), $santas);
+        $this->assertEquals(array_unique($recipients), $recipients);
     }
     
     public function jsonParticipants()
