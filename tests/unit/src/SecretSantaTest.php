@@ -64,31 +64,6 @@ class SecretSantaTest extends TestCase
         ];
     }
 
-    /** 
-     * @test
-     * @dataProvider participantsWithDifferentKeys
-     */
-    public function differentParticipantKeysShouldNotAffectAssignment($participants)
-    {
-        if (extension_loaded('suhosin')) {
-            $this->markTestSkipped('Suhosin extension detected, skipping test');
-        }
-
-        $actual = $this->santa->assign($participants);
-        $this->assertCount(3, $actual);
-        $this->assertContains(['santa' => 'alice', 'recipient' => 'carol'], $actual);
-        $this->assertContains(['santa' => 'bob', 'recipient' => 'alice'], $actual);
-        $this->assertContains(['santa' => 'carol', 'recipient' => 'bob'], $actual);
-    }    
-
-    public function participantsWithDifferentKeys()
-    {
-        return [
-            [[5 => 'alice', 1 => 'bob', 2 => 'carol']],
-            [['string' => 'alice', 'stuff' => 'bob', 'asKeys' => 'carol']],
-        ];
-    }
-
     /** @test */
     public function everyAssignmentShouldBeRandom()
     {
