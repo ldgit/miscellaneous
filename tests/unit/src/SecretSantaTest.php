@@ -70,6 +70,10 @@ class SecretSantaTest extends TestCase
      */
     public function differentParticipantKeysShouldNotAffectAssignment($participants)
     {
+        if (extension_loaded('suhosin')) {
+            $this->markTestSkipped('Suhosin extension detected, skipping test');
+        }
+
         $actual = $this->santa->assign($participants);
         $this->assertCount(3, $actual);
         $this->assertContains(['santa' => 'alice', 'recipient' => 'carol'], $actual);
