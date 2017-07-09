@@ -87,6 +87,16 @@ class SecretSantaTest extends TestCase
         ];
     }
 
+    /** @test */
+    public function eachNextAssignmentShouldBeRandomized()
+    {
+        $participants = $this->getParticipantsFromJsonFile(__DIR__.'/fixtures/medium.json');
+        $firstAssignment = $this->santa->assign($participants);
+        $secondAssignment = $this->santa->assign($participants);
+        $this->assertCount(count($firstAssignment), $secondAssignment);
+        $this->assertNotEquals($firstAssignment, $secondAssignment);
+    }
+
     /** 
      * @test
      * @dataProvider jsonParticipants

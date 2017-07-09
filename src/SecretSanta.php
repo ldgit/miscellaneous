@@ -7,17 +7,14 @@ namespace Events;
  */
 class SecretSanta
 {
-    private $seed;
-
     public function __construct(int $seed = 0)
     {
-        $this->seed = $seed;
+        $this->setSeedIfNotZero($seed);
     }
 
     public function assign(array $participants)
     {
         $this->validateParticipants($participants);
-        $this->setSeed();
 
         $assignments = [];
         $participantCount = count($participants);
@@ -47,9 +44,11 @@ class SecretSanta
         }
     }
 
-    private function setSeed()
+    private function setSeedIfNotZero(int $seed)
     {
-        srand($this->seed !== 0 ? $this->seed : microtime(true));
+        if($seed !== 0) {
+            srand($seed);
+        }
     }
 
     private function isFinalParticipant(int $index, int $participantCount): bool
