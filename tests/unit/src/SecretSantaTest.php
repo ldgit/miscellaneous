@@ -71,12 +71,10 @@ class SecretSantaTest extends TestCase
     public function differentParticipantKeysShouldNotAffectAssignment($participants)
     {
         $actual = $this->santa->assign($participants);
-        array_multisort($actual);
-        $this->assertEquals([
-            ['santa' => 'alice', 'recipient' => 'carol'],
-            ['santa' => 'bob', 'recipient' => 'alice'],
-            ['santa' => 'carol', 'recipient' => 'bob'],
-        ], $actual);
+        $this->assertCount(3, $actual);
+        $this->assertContains(['santa' => 'alice', 'recipient' => 'carol'], $actual);
+        $this->assertContains(['santa' => 'bob', 'recipient' => 'alice'], $actual);
+        $this->assertContains(['santa' => 'carol', 'recipient' => 'bob'], $actual);
     }    
 
     public function participantsWithDifferentKeys()
@@ -88,7 +86,7 @@ class SecretSantaTest extends TestCase
     }
 
     /** @test */
-    public function eachNextAssignmentShouldBeRandomized()
+    public function everyAssignmentShouldBeRandom()
     {
         $participants = $this->getParticipantsFromJsonFile(__DIR__.'/fixtures/medium.json');
         $firstAssignment = $this->santa->assign($participants);
