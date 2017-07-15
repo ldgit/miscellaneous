@@ -23,8 +23,8 @@ class SecretSanta
 
         foreach ($participants as $index => $participant) {
             $assignments[] = [
-                'santa' => $participant, 
-                'recipient' => $this->isFinalParticipant($index, $participantCount) 
+                'santa' => $participant,
+                'recipient' => $this->isFinalParticipant($index, $participantCount)
                     ? $this->getFirstParticipant($participants)
                     : $this->getNextParticipant($participants, $index),
             ];
@@ -40,13 +40,13 @@ class SecretSanta
         }
 
         if ($participants !== array_unique($participants)) {
-            throw new \InvalidArgumentException('All participants must be unique');         
+            throw new \InvalidArgumentException('All participants must be unique');
         }
     }
 
     private function setSeedIfNotZero(int $seed)
     {
-        if($seed !== 0) {
+        if ($seed !== 0) {
             srand($seed);
         }
     }

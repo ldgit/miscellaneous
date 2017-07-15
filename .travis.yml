@@ -2,6 +2,11 @@ language: php
 php:
   - '7.0'
   - '7.1'
-# Lint PHP files
-before_install: find ./ -name '*.php' ! -path '*vendor/*' ! -path '*var/cache/*' -print0 | xargs -0 -n1 -P4 php -l
 install: composer install
+script:
+  # Check coding standard
+  - vendor/bin/php-cs-fixer fix --dry-run --config=.php_cs.dist -v --using-cache=no
+  # Lint PHP files
+  - find ./ -name '*.php' ! -path '*vendor/*' ! -path '*var/cache/*' -print0 | xargs -0 -n1 -P4 php -l
+  - vendor/bin/phpunit
+  - vendor/bin/phpunit -c phpunit-integration.xml

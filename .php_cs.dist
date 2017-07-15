@@ -2,7 +2,8 @@
 
 $finder = PhpCsFixer\Finder::create()
     ->exclude('vendor')
-    ->exclude('var/cache')
+    ->exclude('var')
+    ->notPath('web/config.php')
     ->in(__DIR__)
 ;
 

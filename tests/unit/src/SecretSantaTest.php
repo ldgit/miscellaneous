@@ -12,9 +12,9 @@ class SecretSantaTest extends TestCase
     public function setUp()
     {
         $this->santa = new SecretSanta(self::SEED);
-    }    
+    }
 
-    /** 
+    /**
      * @test
      * @dataProvider invalidParticipantsList
      */
@@ -36,12 +36,12 @@ class SecretSantaTest extends TestCase
         $this->santa->assign(['alice', 'bob', 'alice']);
     }
 
-    /** 
+    /**
      * @test
      * @dataProvider twoParticipantsList
      */
     public function shouldAssignParticipantsAsEachOthersSecretSantaIfGivenOnlyTwo(
-        $participants, 
+        $participants,
         $expected
     ) {
         $actual = $this->santa->assign($participants);
@@ -56,7 +56,7 @@ class SecretSantaTest extends TestCase
             [['alice', 'bob'], [
                 ['santa' => 'alice', 'recipient' => 'bob'],
                 ['santa' => 'bob', 'recipient' => 'alice'],
-            ]], 
+            ]],
             [['oscar', 'eve'], [
                 ['santa' => 'oscar', 'recipient' => 'eve'],
                 ['santa' => 'eve', 'recipient' => 'oscar'],
@@ -74,7 +74,7 @@ class SecretSantaTest extends TestCase
         $this->assertNotEquals($firstAssignment, $secondAssignment);
     }
 
-    /** 
+    /**
      * @test
      * @dataProvider jsonParticipants
      */
@@ -84,10 +84,10 @@ class SecretSantaTest extends TestCase
         $participants = $this->getParticipantsFromJsonFile($participantsJsonFile);
         foreach ($this->santa->assign($participants) as $pair) {
             $this->assertNotEquals($pair['santa'], $pair['recipient']);
-        } 
+        }
     }
 
-    /** 
+    /**
      * @test
      * @dataProvider jsonParticipants
      */
@@ -100,7 +100,7 @@ class SecretSantaTest extends TestCase
         $this->assertEquals(array_unique($recipients), $recipients);
     }
 
-    /** 
+    /**
      * @test
      * @dataProvider jsonParticipants
      */
