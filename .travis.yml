@@ -2,4 +2,6 @@ language: php
 php:
   - '7.0'
   - '7.1'
+# Lint PHP files
+before_install: find ./ -name '*.php' ! -path '*vendor/*' ! -path '*var/cache/*' -print0 | xargs -0 -n1 -P4 php -l
 install: composer install
