@@ -4,6 +4,7 @@ php:
   - '7.1'
 install: composer install
 script:
+  - php bin/console security:check 
   # Check coding standard
   - vendor/bin/php-cs-fixer fix --dry-run --config=.php_cs.dist -v --using-cache=no
   # Lint PHP files
