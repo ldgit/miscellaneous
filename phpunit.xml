@@ -4,11 +4,10 @@
 >
     <php>
         <ini name="error_reporting" value="-1" />
-        <server name="KERNEL_CLASS" value="AppKernel" />
     </php>
     <testsuites>
         <testsuite name="Main test suite">
-            <directory>./tests</directory>
+            <directory>./tests/unit</directory>
         </testsuite>
     </testsuites>
 
